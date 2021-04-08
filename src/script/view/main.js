@@ -1,61 +1,90 @@
-import {DataSource} from '../data/data-source.js'
+import { DataSource } from '../data/data-source.js'
+
 
 const main = () => {
     const mainElement = document.querySelector('main')
     const appbarElement = document.querySelector('app-bar')
     const movieListElement = document.querySelector('movie-list')
     const dataSource = new DataSource();
-    const navPage = document.createElement('nav-page')
-    mainElement.appendChild(navPage)
 
-    const linkLoadMore = document.createElement('a')
+    const linkLoadMore = document.createElement('button')
+    const noMoreMovieElement = document.createElement('div')
+    noMoreMovieElement.innerHTML = `<h2 class="placeholder">No more movies</h2>`
+    noMoreMovieElement.hidden = true
+
+    linkLoadMore.setAttribute('class', 'max-width btn btn-danger load-more')
+    linkLoadMore.setAttribute('type', 'button')
     linkLoadMore.innerText = 'Load More'
+    
     mainElement.appendChild(linkLoadMore)
+    mainElement.appendChild(noMoreMovieElement)
 
-    const searchCallback = async (query) => {
+    const onSearch = async (query) => {
         console.log('button search clicked!')
-        if (!query){
+        if (!query) {
             return
         }
         try {
             const results = await dataSource.searchMovie(query)
             movieListElement.movies = results.results
-            navPage.pageCount = results.total_pages
-        } 
+            noMoreMovieElement.hidden = true
+            linkLoadMore.hidden = false
+            linkLoadMore.removeEventListener('click', loadMoreTrendingMovies)
+            linkLoadMore.addEventListener('click', loadMoreSearchMovies)
+        }
         catch (error) {
             movieListElement.renderError(error)
+            linkLoadMore.hidden = true
         }
     };
-    
+
+    const onLoadTrendingMovies = () => {
+        dataSource.trendingList()
+            .then(results => {
+                movieListElement.movies = results.results
+                noMoreMovieElement.hidden = true
+                linkLoadMore.hidden = false
+                linkLoadMore.removeEventListener('click', loadMoreSearchMovies)
+                linkLoadMore.addEventListener('click', loadMoreTrendingMovies)
+            }).catch(error => {
+                movieListElement.renderError(error)
+                linkLoadMore.hidden = true
+            })
+    }
+
     const onMovieClickCallback = id => {
         console.log(id, 'clicked')
     }
 
+    const noMoreMovie = () => {
+        noMoreMovieElement.hidden = false
+        linkLoadMore.hidden = true
+    }
+
     const loadMoreTrendingMovies = () => {
         dataSource.loadMoreTrendingMovies()
-        .then(results => {
-            movieListElement.moreMovies = results.results
-        }).catch(error => {
-            movieListElement.renderError(error)
-        })
+            .then(results => {
+                movieListElement.moreMovies = results.results
+                linkLoadMore.hidden = false
+            }).catch(error => {
+                noMoreMovie()
+            })
     }
 
     const loadMoreSearchMovies = () => {
-
+        dataSource.loadMoreSearchMovies()
+            .then(results => {
+                movieListElement.moreMovies = results.results
+                linkLoadMore.hidden = false
+            }).catch(error => {
+                noMoreMovie()
+            })
     }
 
-    linkLoadMore.addEventListener('click', loadMoreTrendingMovies)
-
-    appbarElement.searchCallback = searchCallback;
+    appbarElement.onSearch = onSearch;
     movieListElement.onItemClickCallback = onMovieClickCallback
 
-    dataSource.trendingList()
-    .then(results => {
-        movieListElement.movies = results.results
-        navPage.pageCount = results.total_pages
-    }).catch(error => {
-        movieListElement.renderError(error)
-    })
+    onLoadTrendingMovies()
 };
 
 export default main;

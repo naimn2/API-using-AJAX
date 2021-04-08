@@ -4,24 +4,38 @@
     box-sizing: border-box;
 }
 
+.placeholder {
+    font-weight: lighter;
+    color: rgba(0,0,0,0.5);
+    text-align: center;
+}
+
 body {
     font-family: sans-serif;
     padding-top: 60px;
 }
 
+.load-more {
+    margin-bottom: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
 main {
     width: 95%;
     margin: 32px auto;
+    border: 2px solid gainsboro;
+}
+
+.max-width {
+    width: 100%;
 }
 
 movie-list {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
-    margin-top: 32px;
-    margin-bottom: 16px;
     width: auto;
     padding: 16px;
-    border: 2px solid gainsboro; /* sementara */
 }
 
 movie-item {
@@ -41,7 +55,14 @@ movie-item {
     position: relative;
     background-color: transparent;
 }
-.movie-container > img {
+
+.modal-body > img {
+    position: relative;
+    margin: 16px auto;
+    display: block;
+}
+
+.poster {
     width: 100%;
     height: 100%;
     background-color: gray;
@@ -55,10 +76,6 @@ movie-item {
     padding: 8px;
     position: absolute;
     bottom: 0px;
-}
-nav-page {
-    margin-top: 40px;
-    position: relative;
 }
 .button-detail-container {
     position: absolute;

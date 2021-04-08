@@ -1,6 +1,11 @@
 import './movie-item.js'
 
 class MovieList extends HTMLElement {
+    constructor() {
+        super()
+        this._header = 'Trending Movies'
+    }
+
     set onItemClickCallback(onItemClickCallback) {
         this._onItemClickCallback = onItemClickCallback
     }
@@ -15,8 +20,12 @@ class MovieList extends HTMLElement {
         this.render()
     }
 
+    set header(header='Trending Movies') {
+        this._header = header
+    }
+
     render() {
-        this.innerHTML = ''
+        this.innerHTML = ``
         for (let movie of this._movies) {
             const movieElement = document.createElement("movie-item")
             movieElement.onItemClickCallback = this._onItemClickCallback

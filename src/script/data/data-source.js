@@ -9,7 +9,27 @@ class DataSource {
         this._searchPage = 1
     }
 
-    async trendingList() {
+    trendingList() {
+        this._trendingPage = 1
+        return this.trending()
+    }
+
+    searchMovie(keyword) {
+        this._searchPage = 1
+        return this.search(keyword)
+    }
+
+    loadMoreTrendingMovies() {
+        this._trendingPage++
+        return this.trending()
+    }
+
+    loadMoreSearchMovies() {
+        this._searchPage++
+        return this.search(this.keyword)
+    }
+
+    async trending() {
         try {
             const response = await fetch(`${BASE_URL}/${V_AUTH}/trending/movie/day?api_key=${API_KEY}&page=${this._trendingPage}`, {
                 method: "GET",
@@ -34,12 +54,8 @@ class DataSource {
         }
     }
 
-    loadMoreTrendingMovies() {
-        this._trendingPage++
-        return this.trendingList()
-    }
-
-    async searchMovie(keyword) {
+    async search(keyword) {
+        this.keyword = keyword
         try {
             const response = await fetch(`${BASE_URL}/${V_AUTH}/search/movie?api_key=${API_KEY}&page=1&query=${keyword}&page=${this._searchPage}`, {
                 method: "GET",
