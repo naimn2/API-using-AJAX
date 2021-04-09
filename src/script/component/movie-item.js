@@ -17,6 +17,9 @@ class MovieItem extends HTMLElement {
 
     render() {
         // console.log(BASE_IMAGE_URL+this._movie.poster_path);
+        if (!this._movie.release_date) {
+            this._movie.release_date = ''
+        }
         this.innerHTML = `
         <div class="movie-container">
             <div class="button-detail-container">

@@ -25,17 +25,21 @@ class MovieList extends HTMLElement {
     }
 
     render() {
-        this.innerHTML = ``
+        this.innerHTML = `<div class="grid-container"></div>`
+        const container = document.querySelector('.grid-container')
         for (let movie of this._movies) {
             const movieElement = document.createElement("movie-item")
             movieElement.onItemClickCallback = this._onItemClickCallback
             movieElement.movie = movie
-            this.appendChild(movieElement);
+            container.appendChild(movieElement);
         }
     }
 
-    renderError(message) {
+    reset() {
         this.innerHTML = ''
+    }
+
+    renderError(message) {
         this.innerHTML += `<h2 class="placeholder">${message}</h2>`
     }
 }

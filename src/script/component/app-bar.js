@@ -7,6 +7,15 @@ class AppBar extends HTMLElement {
             const query = this.querySelector('#searchElement').value
             this._onSearch(query)
         }
+        this.onTrendingClick = () => {
+            this._onMenuClick('trending')
+        }
+        this.onPopularClick = () => {
+            this._onMenuClick('popular')
+        }
+        this.onUpcomingClick = () => {
+            this._onMenuClick('upcoming')
+        }
     }
 
     connectedCallback() {
@@ -23,6 +32,10 @@ class AppBar extends HTMLElement {
         this.querySelector('#searchButton').addEventListener('click', this.search)
     }
 
+    set onMenuClick(onMenuClick) {
+        this._onMenuClick = onMenuClick
+    }
+
     render() {
         this.innerHTML = `
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
@@ -33,8 +46,14 @@ class AppBar extends HTMLElement {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/">Trending</a>
+                        <li class="nav-item" id="menu-trending">
+                            <a class="nav-link" aria-current="page" href="#">Trending</a>
+                        </li>
+                        <li class="nav-item" id="menu-popular">
+                            <a class="nav-link" aria-current="page" href="#">Popular</a>
+                        </li>
+                        <li class="nav-item" id="menu-upcoming">
+                            <a class="nav-link" aria-current="page" href="#">Upcoming</a>
                         </li>
                     </ul>
                     <div class="d-flex">
@@ -57,6 +76,9 @@ class AppBar extends HTMLElement {
                 width: '-=40px'
             })
         })
+        $('#menu-trending').click(this.onTrendingClick)
+        $('#menu-popular').click(this.onPopularClick)
+        $('#menu-upcoming').click(this.onUpcomingClick)
     }
 }
 
